@@ -1,1 +1,31 @@
-.github/workflows/windows-build.yml
+name: Build Windows Installer
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build React Client
+        run: npm run build-client
+
+      - name: Package Windows Installer
+        run: npm run dist
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: SubmittalGenerator-Installer
+          path: dist/*.exe
